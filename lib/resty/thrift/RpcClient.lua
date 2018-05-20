@@ -4,6 +4,7 @@
 ----
 local TSocket = require "resty.thrift.thrift-lua.TSocket"
 local TFramedTransport = require "resty.thrift.thrift-lua.TFramedTransport"
+local TBufferedTransport = require "resty.thrift.thrift-lua.TBufferedTransport"
 local TBinaryProtocol = require "resty.thrift.thrift-lua.TBinaryProtocol"
 local Object = require "resty.thrift.Object"
 
@@ -21,7 +22,8 @@ function RpcClient:init(ip,port)
 		readTimeout = self.readTimeout
 	 }
 	socket:setTimeout(self.timeout)
-	local transport = TFramedTransport:new{
+--	local transport = TFramedTransport:new{
+	local transport = TBufferedTransport:new{
 		trans = socket
 	}
 	local protocol = TBinaryProtocol:new{

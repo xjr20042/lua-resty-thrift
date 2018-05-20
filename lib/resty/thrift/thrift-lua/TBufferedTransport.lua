@@ -17,13 +17,16 @@
 -- under the License.
 --
 
-local TTransport = require "resty.thrift.thrift-lua.TTransport"
-local TTransportException = TTransport[1]
-local TTransportBase = TTransport[2]
-local TServerTransportBase = TTransport[3]
-local TTransportFactoryBase = TTransport[4]
+--local TTransport = require "resty.thrift.thrift-lua.TTransport"
+--local TTransportException = TTransport[1]
+--local TTransportBase = TTransport[2]
+--local TServerTransportBase = TTransport[3]
+--local TTransportFactoryBase = TTransport[4]
+local Thrift = require 'resty.thrift.thrift-lua.Thrift'
+local __TObject = Thrift[3]
 
-local TBufferedTransport = TTransportBase:new{
+--local TBufferedTransport = TTransportBase:new{
+local TBufferedTransport = __TObject:new{
   __type = 'TBufferedTransport',
   rBufSize = 2048,
   wBufSize = 2048,
@@ -31,18 +34,18 @@ local TBufferedTransport = TTransportBase:new{
   rBuf = ''
 }
 
-function TBufferedTransport:new(obj)
-  if ttype(obj) ~= 'table' then
-    error(ttype(self) .. 'must be initialized with a table')
-  end
-
-  -- Ensure a transport is provided
-  if not obj.trans then
-    error('You must provide ' .. ttype(self) .. ' with a trans')
-  end
-
-  return TTransportBase:new(obj)
-end
+--function TBufferedTransport:new(obj)
+--  if ttype(obj) ~= 'table' then
+--    error(ttype(self) .. 'must be initialized with a table')
+--  end
+--
+--  -- Ensure a transport is provided
+--  if not obj.trans then
+--    error('You must provide ' .. ttype(self) .. ' with a trans')
+--  end
+--
+--  return TTransportBase:new(obj)
+--end
 
 function TBufferedTransport:isOpen()
   return self.trans:isOpen()
@@ -79,18 +82,18 @@ function TBufferedTransport:flush()
   end
 end
 
-local TBufferedTransportFactory = TTransportFactoryBase:new{
-  __type = 'TBufferedTransportFactory'
-}
+--local TBufferedTransportFactory = TTransportFactoryBase:new{
+--  __type = 'TBufferedTransportFactory'
+--}
 
-function TBufferedTransportFactory:getTransport(trans)
-  if not trans then
-    terror(TTransportException:new{
-      message = 'Must supply a transport to ' .. ttype(self)
-    })
-  end
-  return TBufferedTransport:new{
-    trans = trans
-  }
-end
+--function TBufferedTransportFactory:getTransport(trans)
+--  if not trans then
+--    terror(TTransportException:new{
+--      message = 'Must supply a transport to ' .. ttype(self)
+--    })
+--  end
+--  return TBufferedTransport:new{
+--    trans = trans
+--  }
+--end
 return TBufferedTransport
