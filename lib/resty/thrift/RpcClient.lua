@@ -3,7 +3,7 @@
 ----Date: 20151020
 ----
 local TSocket = require "resty.thrift.thrift-lua.TSocket"
-local TFramedTransport = require "resty.thrift.thrift-lua.TFramedTransport"
+--local TFramedTransport = require "resty.thrift.thrift-lua.TFramedTransport"
 local TBufferedTransport = require "resty.thrift.thrift-lua.TBufferedTransport"
 local TBinaryProtocol = require "resty.thrift.thrift-lua.TBinaryProtocol"
 local Object = require "resty.thrift.Object"

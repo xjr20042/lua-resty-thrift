@@ -46,4 +46,12 @@ end
 function GenericObjectPool:remove()
 
 end
+
+function GenericObjectPool:closeConnection(client)
+    if(client ~= nil)then
+        if (client.iprot.trans.trans:isOpen())then
+            client.iprot.trans.trans:close()
+        end
+    end
+end
 return GenericObjectPool
