@@ -1,14 +1,57 @@
 local Thrift = require 'resty.thrift.thrift-lua.Thrift'
+local TTrans = require 'resty.thrift.thrift-lua.TTransport'
+local TTransportBase = TTrans[2]
 local tcp = ngx.socket.tcp
 local __TObject = Thrift[3]
--- TSocket
-local TSocket = __TObject:new{
-  __type = 'TSocket',
+local ttype = Thrift[8]
+local terror = Thrift[9]
+
+local TSocketBase = TTransportBase:new{
+  __type = 'TSocketBase',
   timeout = 1000,
   host = 'localhost',
   port = 9090,
   handle
 }
+
+function TSocketBase:close()
+  if self.handle then
+    self.handle:destroy()
+    self.handle = nil
+  end
+end
+
+-- Returns a table with the fields host and port
+function TSocketBase:getSocketInfo()
+  if self.handle then
+    return self.handle:getsockinfo()
+  end
+  terror(TTransportException:new{errorCode = TTransportException.NOT_OPEN})
+end
+
+function TSocketBase:setTimeout(timeout)
+  if timeout and ttype(timeout) == 'number' then
+    if self.handle then
+      self.handle:settimeout(timeout)
+    end
+    self.timeout = timeout
+  end
+end
+
+-- TSocket
+TSocket = TSocketBase:new{
+  __type = 'TSocket',
+  host = 'localhost',
+  port = 9090
+}
+-- TSocket
+--local TSocket = __TObject:new{
+--  __type = 'TSocket',
+--  timeout = 1000,
+--  host = 'localhost',
+--  port = 9090,
+--  handle
+--}
 
 function TSocket:isOpen()
   if self.handle then
@@ -27,7 +70,7 @@ end
 
 function TSocket:close()
   if self.handle then
-      self.handle:close()
+      if self.handle.close then self.handle:close() end
     self.handle = nil
   end
 end
@@ -87,4 +130,16 @@ function TSocket:setKeepalive(...)
   local sock = self.handle
   sock:setkeepalive(...)
 end
-return TSocket
+-- TServerSocket
+local TServerSocket = TSocketBase:new{
+  __type = 'TServerSocket',
+  host = 'localhost',
+  port = 9090,
+  handle
+}
+
+function TServerSocket:accept() 
+    return TSocket:new({handle = ngx.req.socket()})
+end
+
+return {TSocket, TServerSocket}

@@ -20,6 +20,7 @@ local Thrift = require 'resty.thrift.thrift-lua.Thrift'
 local TType = Thrift[1]
 local __TObject = Thrift[3]
 local TException = Thrift[4]
+local ttype = Thrift[8]
 
 local TProtocolException = TException:new {
   UNKNOWN          = 0,
@@ -162,4 +163,4 @@ local TProtocolFactory = __TObject:new{
   __type = 'TProtocolFactory',
 }
 function TProtocolFactory:getProtocol(trans) end
-return {TProtocolException,TProtocolBase}
+return {TProtocolException,TProtocolBase,TProtocolFactory}

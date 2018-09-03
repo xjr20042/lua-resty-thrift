@@ -17,12 +17,22 @@
 -- under the License.
 --
 
-require 'resty.thrift.thrift-lua.Thrift'
-require 'resty.thrift.thrift-lua.TFramedTransport'
-require 'resty.thrift.thrift-lua.TBinaryProtocol'
+--require 'resty.thrift.thrift-lua.Thrift'
+--require 'resty.thrift.thrift-lua.TFramedTransport'
+--require 'resty.thrift.thrift-lua.TBinaryProtocol'
+local Thrift = require 'resty.thrift.thrift-lua.Thrift'
+local __TObject = Thrift[3]
+local TFramed = require "resty.thrift.thrift-lua.TFramedTransport"
+local TFramedTransport, TFramedTransportFactory = TFramed[1], TFramed[2]
+local TBuffered = require "resty.thrift.thrift-lua.TBufferedTransport"
+local TBufferedTransport, TBufferedTransportFactory = TBuffered[1], TBuffered[2]
+local TBinary = require "resty.thrift.thrift-lua.TBinaryProtocol"
+local TBinaryProtocol, TBinaryProtocolFactory = TBinary
+local ttype = Thrift[8]
+local terror = Thrift[9]
 
 -- TServer
-TServer = __TObject:new{
+local TServer = __TObject:new{
   __type = 'TServer'
 }
 
@@ -48,7 +58,7 @@ function TServer:new(args)
     obj.outputTransportFactory = obj.transportFactory
     obj.transportFactory = nil
   else
-    obj.inputTransportFactory = TFramedTransportFactory:new{}
+    obj.inputTransportFactory = TBufferedTransportFactory:new{}
     obj.outputTransportFactory = obj.inputTransportFactory
   end
 
@@ -119,21 +129,20 @@ end
 
 -- TSimpleServer
 --  Single threaded server that handles one transport (connection)
-TSimpleServer = __TObject:new(TServer, {
+local TSimpleServer = __TObject:new(TServer, {
   __type = 'TSimpleServer',
   __stop = false
 })
 
 function TSimpleServer:serve()
-  self.serverTransport:listen()
+  --self.serverTransport:listen()
   self:_preServe()
-  while not self.__stop do
-    client = self.serverTransport:accept()
-    self:handle(client)
-  end
+  client = self.serverTransport:accept()
+  self:handle(client)
   self:close()
 end
 
 function TSimpleServer:stop()
   self.__stop = true
 end
+return TSimpleServer

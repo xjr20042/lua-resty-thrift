@@ -19,6 +19,10 @@
 local libluabpack = require "libluabpack"
 local Thrift = require 'resty.thrift.thrift-lua.Thrift'
 local __TObject = Thrift[3]
+local Transport = require 'resty.thrift.thrift-lua.TTransport'
+local TTransportFactoryBase = Transport[4]
+local ttype = Thrift[8]
+local terror = Thrift[9]
 
 local TFramedTransport = __TObject:new{
   __type = 'TFramedTransport',
@@ -107,15 +111,15 @@ function TFramedTransport:flush()
   self.trans:flush()
 end
 
---local TFramedTransportFactory = TTransportFactoryBase:new{
---  __type = 'TFramedTransportFactory'
---}
---function TFramedTransportFactory:getTransport(trans)
---  if not trans then
---    terror(TProtocolException:new{
---      message = 'Must supply a transport to ' .. ttype(self)
---    })
---  end
---  return TFramedTransport:new{trans = trans}
---end
-return TFramedTransport
+local TFramedTransportFactory = TTransportFactoryBase:new{
+  __type = 'TFramedTransportFactory'
+}
+function TFramedTransportFactory:getTransport(trans)
+  if not trans then
+    terror(TProtocolException:new{
+      message = 'Must supply a transport to ' .. ttype(self)
+    })
+  end
+  return TFramedTransport:new{trans = trans}
+end
+return {TFramedTransport, TFramedTransportFactory}

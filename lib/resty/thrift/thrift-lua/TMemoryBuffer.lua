@@ -21,6 +21,8 @@ local TTransportException = TTransport[1]
 local TTransportBase = TTransport[2]
 local TServerTransportBase = TTransport[3]
 local TTransportFactoryBase = TTransport[4]
+local Thrift = require 'resty.thrift.thrift-lua.Thrift'
+local terror = Thrift[9]
 
 local TMemoryBuffer = TTransportBase:new{
   __type = 'TMemoryBuffer',

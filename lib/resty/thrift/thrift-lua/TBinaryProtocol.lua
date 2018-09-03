@@ -20,6 +20,10 @@ local libluabpack = require "libluabpack"
 local Thrift = require 'resty.thrift.thrift-lua.Thrift'
 local TType = Thrift[1]
 local __TObject = Thrift[3]
+local Protocol = require 'resty.thrift.thrift-lua.TProtocol'
+local TProtocolFactory = Protocol[3]
+local ttype = Thrift[8]
+local terror = Thrift[9]
 
 local TBinaryProtocol = __TObject:new{
   __type = 'TBinaryProtocol',
@@ -244,22 +248,22 @@ function TBinaryProtocol:readString()
   return str
 end
 
---local TBinaryProtocolFactory = TProtocolFactory:new{
---  __type = 'TBinaryProtocolFactory',
---  strictRead = false
---}
---
---function TBinaryProtocolFactory:getProtocol(trans)
---  -- TODO Enforce that this must be a transport class (ie not a bool)
---  if not trans then
---    terror(TProtocolException:new{
---      message = 'Must supply a transport to ' .. ttype(self)
---    })
---  end
---  return TBinaryProtocol:new{
---    trans = trans,
---    strictRead = self.strictRead,
---    strictWrite = true
---  }
---end
-return TBinaryProtocol
+local TBinaryProtocolFactory = TProtocolFactory:new{
+  __type = 'TBinaryProtocolFactory',
+  strictRead = false
+}
+
+function TBinaryProtocolFactory:getProtocol(trans)
+  -- TODO Enforce that this must be a transport class (ie not a bool)
+  if not trans then
+    terror(TProtocolException:new{
+      message = 'Must supply a transport to ' .. ttype(self)
+    })
+  end
+  return TBinaryProtocol:new{
+    trans = trans,
+    strictRead = self.strictRead,
+    strictWrite = true
+  }
+end
+return {TBinaryProtocol, TBinaryProtocolFactory}

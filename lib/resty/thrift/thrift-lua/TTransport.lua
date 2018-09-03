@@ -20,6 +20,7 @@ local Thrift = require 'resty.thrift.thrift-lua.Thrift'
 local TType = Thrift[1]
 local __TObject = Thrift[3]
 local TException = Thrift[4]
+local terror = Thrift[9]
 
 local TTransportException = TException:new {
   UNKNOWN             = 0,
@@ -94,4 +95,4 @@ function TTransportFactoryBase:getTransport(trans)
   return trans
 end
 
-return {TTransportException,TTransportBase}
+return {TTransportException,TTransportBase,TServerTransportBase,TTransportFactoryBase}

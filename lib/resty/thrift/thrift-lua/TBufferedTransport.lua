@@ -17,13 +17,15 @@
 -- under the License.
 --
 
---local TTransport = require "resty.thrift.thrift-lua.TTransport"
---local TTransportException = TTransport[1]
---local TTransportBase = TTransport[2]
---local TServerTransportBase = TTransport[3]
---local TTransportFactoryBase = TTransport[4]
+local TTransport = require "resty.thrift.thrift-lua.TTransport"
+local TTransportException = TTransport[1]
+local TTransportBase = TTransport[2]
+local TServerTransportBase = TTransport[3]
+local TTransportFactoryBase = TTransport[4]
 local Thrift = require 'resty.thrift.thrift-lua.Thrift'
 local __TObject = Thrift[3]
+local ttype = Thrift[8]
+local terror = Thrift[9]
 
 --local TBufferedTransport = TTransportBase:new{
 local TBufferedTransport = __TObject:new{
@@ -82,18 +84,18 @@ function TBufferedTransport:flush()
   end
 end
 
---local TBufferedTransportFactory = TTransportFactoryBase:new{
---  __type = 'TBufferedTransportFactory'
---}
+local TBufferedTransportFactory = TTransportFactoryBase:new{
+  __type = 'TBufferedTransportFactory'
+}
 
---function TBufferedTransportFactory:getTransport(trans)
---  if not trans then
---    terror(TTransportException:new{
---      message = 'Must supply a transport to ' .. ttype(self)
---    })
---  end
---  return TBufferedTransport:new{
---    trans = trans
---  }
---end
-return TBufferedTransport
+function TBufferedTransportFactory:getTransport(trans)
+  if not trans then
+    terror(TTransportException:new{
+      message = 'Must supply a transport to ' .. ttype(self)
+    })
+  end
+  return TBufferedTransport:new{
+    trans = trans
+  }
+end
+return {TBufferedTransport, TBufferedTransportFactory}

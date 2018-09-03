@@ -22,7 +22,7 @@
 --setmetatable(thrift, {__index = _G}) --> perf hit for accessing global methods
 --setfenv(1, thrift)
 
-function ttype(obj)
+local function ttype(obj)
   if type(obj) == 'table' and
     obj.__type and
     type(obj.__type) == 'string' then
@@ -31,7 +31,7 @@ function ttype(obj)
   return type(obj)
 end
 
-function terror(e)
+local function terror(e)
   if e and e.__tostring then
     error(e:__tostring())
     return
@@ -39,7 +39,7 @@ function terror(e)
   error(e)
 end
 
-function ttable_size(t)
+local function ttable_size(t)
   local count = 0
   for k, v in pairs(t) do
     count = count + 1
@@ -77,7 +77,7 @@ local TMessageType = {
 }
 
 -- Recursive __index function to achieve inheritance
-function __tobj_index(self, key)
+local function __tobj_index(self, key)
   local v = rawget(self, key)
   if v ~= nil then
     return v
@@ -111,7 +111,7 @@ function __TObject:new(init_obj)
 end
 
 -- Return a string representation of any lua variable
-function thrift_print_r(t)
+local function thrift_print_r(t)
   local ret = ''
   local ltype = type(t)
   if (ltype == 'table') then
@@ -278,4 +278,4 @@ function __TProcessor:new(obj)
 
   return __TObject.new(self, obj)
 end
-return {TType,TMessageType,__TObject,TException,TApplicationException,__TClient}
+return {TType,TMessageType,__TObject,TException,TApplicationException,__TClient,__TProcessor, ttype, terror}

@@ -2,10 +2,10 @@
 ----Author: xiajun
 ----Date: 20151020
 ----
-local TSocket = require "resty.thrift.thrift-lua.TSocket"
+local TSocket = require "resty.thrift.thrift-lua.TSocket" [1]
 --local TFramedTransport = require "resty.thrift.thrift-lua.TFramedTransport"
-local TBufferedTransport = require "resty.thrift.thrift-lua.TBufferedTransport"
-local TBinaryProtocol = require "resty.thrift.thrift-lua.TBinaryProtocol"
+local TBufferedTransport = require "resty.thrift.thrift-lua.TBufferedTransport" [1]
+local TBinaryProtocol = require "resty.thrift.thrift-lua.TBinaryProtocol" [1]
 local Object = require "resty.thrift.Object"
 
 local RpcClient = Object:new({
