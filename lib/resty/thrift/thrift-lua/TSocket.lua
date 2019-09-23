@@ -39,7 +39,7 @@ function TSocketBase:setTimeout(timeout)
 end
 
 -- TSocket
-TSocket = TSocketBase:new{
+local TSocket = TSocketBase:new{
   __type = 'TSocket',
   host = 'localhost',
   port = 9090
