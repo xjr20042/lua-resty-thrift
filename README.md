@@ -34,7 +34,7 @@ Synopsis
       string say(1:string request)
    }
 ```
-
+	需要安装luajit-devel, 具体原因待查。
 	1. 将本项目lib目录下的resty目录拷贝到openresty的安装目录
 	   :> cp lib/resty /${openresty.path}/lualib/
 	2. 使用generate_resty.py自动生成代码
